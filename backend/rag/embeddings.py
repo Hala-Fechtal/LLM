@@ -1,3 +1,4 @@
+from typing import List
 from sentence_transformers import SentenceTransformer
 
 # Initialize the model globally so it's loaded only once when the server starts.
@@ -5,7 +6,7 @@ from sentence_transformers import SentenceTransformer
 # It outputs vectors of 384 dimensions.
 model = SentenceTransformer('all-MiniLM-L6-v2')
 
-def get_embedding(text: str) -> list[float]:
+def get_embedding(text: str) -> List[float]:
     """
     Takes a string of text and returns its vector embedding as a list of floats.
     """
