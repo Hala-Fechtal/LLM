@@ -1,11 +1,16 @@
 from qdrant_client import QdrantClient
 from qdrant_client.models import Distance, VectorParams, PointStruct, Filter, FieldCondition, MatchValue
 from rag.embeddings import get_embedding
+import os
 import uuid
 from typing import List, Dict, Any
 
-# Connect to local Qdrant instance
-client = QdrantClient(host="localhost", port=6333)
+# Connexion à Qdrant : "localhost" par défaut (usage local direct),
+# ou la valeur de QDRANT_HOST si définie (ex: "qdrant" via docker-compose).
+client = QdrantClient(
+    host=os.getenv("QDRANT_HOST", "localhost"),
+    port=int(os.getenv("QDRANT_PORT", "6333")),
+)
 
 COLLECTION_NAME = "documents"
 VECTOR_SIZE = 384

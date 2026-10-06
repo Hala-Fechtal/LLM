@@ -9,5 +9,23 @@ services:
       - qdrant_storage:/qdrant/storage   # stockage persistant : survit à un `docker compose down`
     restart: unless-stopped
 
+  backend:
+    build: ./backend        # construit l'image depuis backend/Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - QDRANT_HOST=qdrant   # le backend joint Qdrant par son nom de service, pas "localhost"
+    env_file:
+      - backend/.env          # fournit GROQ_API_KEY sans jamais l'écrire ici
+    depends_on:
+      - qdrant
+
+  frontend:
+    build: ./llm
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
 volumes:
   qdrant_storage:

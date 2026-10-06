@@ -1,0 +1,5 @@
+# Dépendances utiles seulement en développement (tests, etc.)
+# Pas nécessaires pour faire tourner l'app en production.
+-r requirements.txt
+
+pytest==8.3.5
