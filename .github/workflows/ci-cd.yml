@@ -1,0 +1,44 @@
+name: CI/CD
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v4
+
+      - name: Installer Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Lancer les tests backend
+        run: |
+          pip install pytest
+          cd backend
+          pytest tests/
+
+      - name: Se connecter à Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Construire et pousser l'image backend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/rag-backend:latest
+
+      - name: Construire et pousser l'image frontend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./llm
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/rag-frontend:latest
