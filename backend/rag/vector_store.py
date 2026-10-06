@@ -6,10 +6,13 @@ import uuid
 from typing import List, Dict, Any
 
 # Connexion à Qdrant : "localhost" par défaut (usage local direct),
-# ou la valeur de QDRANT_HOST si définie (ex: "qdrant" via docker-compose).
+# ou la valeur de QDRANT_HOST si définie (ex: "qdrant" via docker-compose/Kubernetes).
+# Port codé en dur (toujours 6333) : lire "QDRANT_PORT" depuis l'environnement
+# entre en collision avec la variable que Kubernetes injecte automatiquement
+# pour tout Service nommé "qdrant" (ex: QDRANT_PORT=tcp://10.96.x.x:6333).
 client = QdrantClient(
     host=os.getenv("QDRANT_HOST", "localhost"),
-    port=int(os.getenv("QDRANT_PORT", "6333")),
+    port=6333,
 )
 
 COLLECTION_NAME = "documents"
